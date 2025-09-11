@@ -31,11 +31,7 @@ form.addEventListener("submit", (event) => {
   };
 
   expenses.push(expense);
-
-  expenses.forEach((expense) => {
-    handleCreateExpenseList(expense.name, expense.category, expense.price);
-    console.log(expense);
-  });
+  handleCreateExpenseList(expense.name, expense.category, expense.price);
 });
 
 function formatCurrencyBRL(value) {
@@ -51,6 +47,7 @@ function handleCreateExpenseList(name, category, price) {
   expensesList.append(li);
 
   const expenseImg = document.createElement("img");
+  expenseImg.src = expenseImage(category);
   li.append(expenseImg);
 
   const div = document.createElement("div");
@@ -63,7 +60,7 @@ function handleCreateExpenseList(name, category, price) {
   const expenseCategory = document.createElement("span");
   div.append(expenseName);
   div.appendChild(expenseCategory);
-  expenseCategory.textContent = category;
+  expenseCategory.textContent = categoryFormated(category);
 
   const expenseAmount = document.createElement("span");
   const value = formatCurrencyBRL(price).replace("R$", "");
@@ -80,4 +77,36 @@ function handleCreateExpenseList(name, category, price) {
   deleteExpense.classList.add("remove-icon");
   deleteExpense.src = "/img/remove.svg";
   li.appendChild(deleteExpense);
+}
+
+function categoryFormated(category) {
+  switch (category) {
+    case "food":
+      return "Alimentação";
+    case "accommodation":
+      return "Hospedagem";
+    case "services":
+      return "Serviços";
+    case "transport":
+      return "Transporte";
+    case "others":
+      return "Outros";
+    default:
+  }
+}
+
+function expenseImage(category) {
+  switch (category) {
+    case "food":
+      return "./img/food.svg";
+    case "accommodation":
+      return "./img/accommodation.svg";
+    case "services":
+      return "./img/services.svg";
+    case "transport":
+      return "./img/transport.svg";
+    case "others":
+      return "./img/others.svg";
+    default:
+  }
 }
