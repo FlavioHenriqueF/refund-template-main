@@ -1,3 +1,4 @@
+// Chamando todos os elementos a serem modificados.
 const form = document.querySelector("form");
 const expenseInput = document.getElementById("expense");
 const category = document.getElementById("category");
@@ -5,9 +6,14 @@ const amount = document.getElementById("amount");
 const aside = document.querySelector("aside");
 const expensesList = document.createElement("ul");
 aside.appendChild(expensesList);
+const countExpenses = document.querySelector("span");
+const cipherExpenseTotalCount = document.querySelector("small");
+const expenseTotalCount = document.querySelector("h2");
 
+// Criando array de despesas.
 const expenses = [];
 
+// Validacao para permitir que apenas numeros sejam digitados nos valores de despesas
 amount.addEventListener("input", (event) => {
   let value = event.target.value;
   value = value.replace(/\D+/g, "");
@@ -18,6 +24,7 @@ amount.addEventListener("input", (event) => {
   event.target.value = formatCurrencyBRL(valueFormatted);
 });
 
+// Submit do formulario para criar todos os valores do formulario a serem trabalhados
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -31,12 +38,17 @@ form.addEventListener("submit", (event) => {
   };
 
   expenses.push(expense);
+
   handleCreateExpenseList(
     expense.name,
     expense.category,
     expense.price,
     expenses.length
   );
+
+  countExpenses.textContent = ` ${expenses.length} despesas`;
+
+  form.reset();
 });
 
 function formatCurrencyBRL(value) {
@@ -83,8 +95,13 @@ function handleCreateExpenseList(name, category, price, expensesLength) {
   deleteExpense.src = "/img/remove.svg";
   li.appendChild(deleteExpense);
 
+  const expensePriceTotal = handleExpensesIncrease(price);
+  expenseTotalCount.childNodes[1].textContent = formatCurrencyBRL(
+    expensePriceTotal
+  ).replace("R$", "");
+
   deleteExpense.addEventListener("click", () => {
-    handleDeleteExpense(expensesLength, li);
+    handleDeleteExpense(expensesLength, li, expensePriceTotal, price);
   });
 }
 
@@ -120,7 +137,35 @@ function expenseImage(category) {
   }
 }
 
-function handleDeleteExpense(expenseDeletePosition, expenseContent) {
+function handleDeleteExpense(
+  expenseDeletePosition,
+  expenseContent,
+  expensePriceTotal,
+  price
+) {
   expenses.splice(expenseDeletePosition - 1, 1);
   expenseContent.remove();
+
+  countExpenses.textContent = ` ${expenses.length} despesas`;
+
+  expenseTotalCount.childNodes[1].textContent = handleExpensesDecrease(
+    expensePriceTotal,
+    price
+  );
+}
+
+let expensesTotal = 0;
+
+function handleExpensesIncrease(value) {
+  return (expensesTotal = expensesTotal + value);
+}
+
+function handleExpensesDecrease(total, priceToDecrease) {
+  const expensesDecreaseTotal = total - priceToDecrease;
+
+  const expensesDecreaseTotalFormatted = formatCurrencyBRL(
+    expensesDecreaseTotal
+  ).replace("R$", "");
+
+  return expensesDecreaseTotalFormatted;
 }
