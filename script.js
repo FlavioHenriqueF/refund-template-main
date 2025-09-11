@@ -31,7 +31,12 @@ form.addEventListener("submit", (event) => {
   };
 
   expenses.push(expense);
-  handleCreateExpenseList(expense.name, expense.category, expense.price);
+  handleCreateExpenseList(
+    expense.name,
+    expense.category,
+    expense.price,
+    expenses.length
+  );
 });
 
 function formatCurrencyBRL(value) {
@@ -41,7 +46,7 @@ function formatCurrencyBRL(value) {
   });
 }
 
-function handleCreateExpenseList(name, category, price) {
+function handleCreateExpenseList(name, category, price, expensesLength) {
   const li = document.createElement("li");
   li.classList.add("expense");
   expensesList.append(li);
@@ -77,6 +82,10 @@ function handleCreateExpenseList(name, category, price) {
   deleteExpense.classList.add("remove-icon");
   deleteExpense.src = "/img/remove.svg";
   li.appendChild(deleteExpense);
+
+  deleteExpense.addEventListener("click", () => {
+    handleDeleteExpense(expensesLength, li);
+  });
 }
 
 function categoryFormated(category) {
@@ -109,4 +118,9 @@ function expenseImage(category) {
       return "./img/others.svg";
     default:
   }
+}
+
+function handleDeleteExpense(expenseDeletePosition, expenseContent) {
+  expenses.splice(expenseDeletePosition - 1, 1);
+  expenseContent.remove();
 }
