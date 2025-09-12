@@ -28,9 +28,11 @@ amount.addEventListener("input", (event) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
+  // Faz a formatacao dos valores.
   const amountValueNotRs = amount.value.replace("R$", "");
   const amountValueFormatted = amountValueNotRs.replace(",", ".");
 
+  // Cria o Objeto de despesas para ser adicionado dentro do array.
   const expense = {
     name: expenseInput.value,
     category: category.value,
@@ -39,6 +41,7 @@ form.addEventListener("submit", (event) => {
 
   expenses.push(expense);
 
+  // Chama a funcao para criar a interface de despesas.
   handleCreateExpenseList(
     expense.name,
     expense.category,
@@ -46,11 +49,14 @@ form.addEventListener("submit", (event) => {
     expenses.length
   );
 
+  // Atualiza o numero total de despesas
   countExpenses.textContent = ` ${expenses.length} despesas`;
 
+  // Reseta os campos do formulario apos ser feito o submit
   form.reset();
 });
 
+// Formata o valor das despesas para BRL.
 function formatCurrencyBRL(value) {
   return value.toLocaleString("pt-Br", {
     style: "currency",
@@ -58,6 +64,7 @@ function formatCurrencyBRL(value) {
   });
 }
 
+// Cria a interface de despesas.
 function handleCreateExpenseList(name, category, price, expensesLength) {
   const li = document.createElement("li");
   li.classList.add("expense");
@@ -105,6 +112,7 @@ function handleCreateExpenseList(name, category, price, expensesLength) {
   });
 }
 
+// Formata a categoria de cada despesa
 function categoryFormated(category) {
   switch (category) {
     case "food":
@@ -121,6 +129,7 @@ function categoryFormated(category) {
   }
 }
 
+// Filtra o icone correto para cada categoria de despesa.
 function expenseImage(category) {
   switch (category) {
     case "food":
@@ -137,6 +146,7 @@ function expenseImage(category) {
   }
 }
 
+// Deleta uma despesa.
 function handleDeleteExpense(
   expenseDeletePosition,
   expenseContent,
@@ -156,10 +166,12 @@ function handleDeleteExpense(
 
 let expensesTotal = 0;
 
+// Faz a soma de todas as despesas.
 function handleExpensesIncrease(value) {
   return (expensesTotal = expensesTotal + value);
 }
 
+// Faz a subtracao do valor total de despesas caso alguma despesa seja deletada.
 function handleExpensesDecrease(total, priceToDecrease) {
   const expensesDecreaseTotal = total - priceToDecrease;
 
