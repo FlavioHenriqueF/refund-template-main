@@ -64,6 +64,21 @@ function formatCurrencyBRL(value) {
   });
 }
 
+let expensesTotal = 0;
+
+// Faz a soma de todas as despesas.
+function handleExpensesIncrease(value) {
+  return (expensesTotal += value);
+}
+
+// Faz a subtracao do valor total de despesas caso alguma despesa seja deletada.
+function handleExpensesDecrease(total, priceToDecrease) {
+  const expensesDecreaseTotal = total - priceToDecrease;
+
+  console.log(expensesDecreaseTotal);
+  return expensesDecreaseTotal;
+}
+
 // Cria a interface de despesas.
 function handleCreateExpenseList(name, category, price, expensesLength) {
   const li = document.createElement("li");
@@ -102,13 +117,14 @@ function handleCreateExpenseList(name, category, price, expensesLength) {
   deleteExpense.src = "/img/remove.svg";
   li.appendChild(deleteExpense);
 
-  const expensePriceTotal = handleExpensesIncrease(price);
+  let expensePriceTotal = handleExpensesIncrease(price);
   expenseTotalCount.childNodes[1].textContent = formatCurrencyBRL(
     expensePriceTotal
   ).replace("R$", "");
 
   deleteExpense.addEventListener("click", () => {
     handleDeleteExpense(expensesLength, li, expensePriceTotal, price);
+    expensesTotal = handleExpensesDecrease(expensePriceTotal, price);
   });
 }
 
@@ -156,28 +172,13 @@ function handleDeleteExpense(
   expenses.splice(expenseDeletePosition - 1, 1);
   expenseContent.remove();
 
+  // console.log(expenses);
+
   countExpenses.textContent = ` ${expenses.length} despesas`;
 
-  expenseTotalCount.childNodes[1].textContent = handleExpensesDecrease(
-    expensePriceTotal,
-    price
-  );
-}
+  const expenseDecreased = handleExpensesDecrease(expensePriceTotal, price);
 
-let expensesTotal = 0;
-
-// Faz a soma de todas as despesas.
-function handleExpensesIncrease(value) {
-  return (expensesTotal = expensesTotal + value);
-}
-
-// Faz a subtracao do valor total de despesas caso alguma despesa seja deletada.
-function handleExpensesDecrease(total, priceToDecrease) {
-  const expensesDecreaseTotal = total - priceToDecrease;
-
-  const expensesDecreaseTotalFormatted = formatCurrencyBRL(
-    expensesDecreaseTotal
+  expenseTotalCount.childNodes[1].textContent = formatCurrencyBRL(
+    expenseDecreased
   ).replace("R$", "");
-
-  return expensesDecreaseTotalFormatted;
 }
